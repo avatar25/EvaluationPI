@@ -11,6 +11,7 @@ int main()
     int N;
     printf("Enter the number of iterations: ");
     scanf("%d", &N);
+    printf("\nActual value of pi upto 20 digits: 3.14159265358979323846");
     printf("\nThe estimated value of pi: \n");
     omp_set_num_threads(20);
     double start, end;
