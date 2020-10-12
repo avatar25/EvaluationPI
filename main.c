@@ -1,16 +1,18 @@
 #include <stdio.h>
 #include <omp.h>
+#include <stdlib.h>
 #include <math.h>
 
-double  FirstMethod(int N);
-double SecondMethod(int N);
+void FirstMethod(int N);
+void SecondMethod(int N);
+void ThirdMethod(int N);
 int main()
 {
-    // 4[1-1/3+1/5-1/7+1/9....]
     int N;
     printf("Enter the number of iterations: ");
     scanf("%d", &N);
     printf("\nThe estimated value of pi: \n");
+    omp_set_num_threads(20);
 #pragma omp parallel sections
 {
 #pragma omp section
@@ -21,11 +23,15 @@ int main()
     {
         SecondMethod(N);
     }
+#pragma omp section
+    {
+        ThirdMethod(N);
+    }
 }
     return 0;
 }
 
-double FirstMethod(int N)
+void FirstMethod(int N)
 {
     double PI;
     double b;
@@ -33,22 +39,25 @@ double FirstMethod(int N)
     double sum;
     int r1;
     int n = 0;
-    for(float i=1;i<N;i=i+2)
-    {
-       // printf("\n%d ",i);
-        b = i;
-        a = 1/b;
-        //printf("%lf",a);
-        r1 = pow(-1,n);
-        a = r1*a;
-        n=n+1;
-        sum=sum+a;
-    }
-    PI = 4 * sum;
-    printf("\nUsing first method: %lf", PI);
+
+#pragma omp parallel for schedule(dynamic)
+        for(int i=1;i<N;i=i+2)
+        {
+            // printf("\n%d ",i);
+            b = i;
+            a = 1/b;
+            //printf("%lf",a);
+            r1 = pow(-1,n);
+            a = r1*a;
+            n=n+1;
+            sum=sum+a;
+        }
+        PI = 4 * sum;
+        printf("\nUsing 4*(1-1/3+1/5-1/7+1/9....) method: %.10lf", PI);
+
 }
 
-double SecondMethod(int N)
+void SecondMethod(int N)
 {
     float x=0;
     float sum = 0.0;
@@ -68,7 +77,29 @@ double SecondMethod(int N)
         }
     }
     pi=step*sum;
-    printf("\nUsing second method: ");
-    printf("%lf", pi);
+    printf("\nUsing f(x) = 4/(1+x*x) method: %.10lf", pi);
 }
 
+void ThirdMethod(int N)
+{
+    double rand_x, rand_y, origin_dist, Pi;
+    int circle_points = 0, square_points = 0;
+#pragma omp parallel for schedule(static)
+    for (int i = 0; i < (N * N); i++) {
+
+        rand_x = (double)(rand() % (N + 1)) / N;
+        rand_y = (double)(rand() % (N + 1)) / N;
+
+
+        origin_dist = rand_x * rand_x + rand_y * rand_y;
+
+        if (origin_dist <= 1)
+            circle_points++;
+
+        square_points++;
+#pragma omp critical
+        Pi = (double)(4 * circle_points) / square_points;
+    }
+        printf("\nUsing monte carlo method: %.10lf", Pi);
+
+}
