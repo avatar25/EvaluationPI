@@ -3,12 +3,14 @@
 #include <math.h>
 
 double  FirstMethod(int N);
+double SecondMethod(int N);
 int main()
 {
     // 4[1-1/3+1/5-1/7+1/9....]
     int N;
-    printf("Enter the number of iterations for first method: ");
+    printf("Enter the number of iterations: ");
     scanf("%d", &N);
+    printf("\nThe estimated value of pi: \n");
 #pragma omp parallel sections
 {
 #pragma omp section
@@ -17,8 +19,7 @@ int main()
     }
 #pragma omp section
     {
-
-
+        SecondMethod(N);
     }
 }
     return 0;
@@ -44,6 +45,30 @@ double FirstMethod(int N)
         sum=sum+a;
     }
     PI = 4 * sum;
-    printf("\nThe sum is: %lf", sum);
-    printf("\nThe estimated value of pi is %lf", PI);
+    printf("\nUsing first method: %lf", PI);
 }
+
+double SecondMethod(int N)
+{
+    float x=0;
+    float sum = 0.0;
+    float step;
+    double aux;
+    double pi;
+    step = 1.0/N;
+#pragma omp parallel private(pi,x,aux) shared(sum)
+    {
+#pragma omp for schedule(static)
+        for (int i=0; i<N; i=i+1){
+
+            x=(i+0.5)*step;
+            aux=4.0/(1.0+x*x);
+#pragma omp critical
+            sum = sum + aux;
+        }
+    }
+    pi=step*sum;
+    printf("\nUsing second method: ");
+    printf("%lf", pi);
+}
+
