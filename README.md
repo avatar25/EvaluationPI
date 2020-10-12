@@ -12,7 +12,7 @@ Monte Carlo method , very commonly known method.
 
 Output:
 
-![img]https://i.imgur.com/j5ALdIZ.png[/img]
+![img](https://i.imgur.com/j5ALdIZ.png)
 
 
-![img]https://i.imgur.com/6kuZg7D.png[/img]
+![img](https://i.imgur.com/6kuZg7D.png)
