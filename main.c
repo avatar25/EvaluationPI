@@ -13,19 +13,29 @@ int main()
     scanf("%d", &N);
     printf("\nThe estimated value of pi: \n");
     omp_set_num_threads(20);
+    double start, end;
 #pragma omp parallel sections
 {
 #pragma omp section
     {
+        start = omp_get_wtime();
         FirstMethod(N);
+        end = omp_get_wtime();
+        printf("\nTime to run 4*(1-1/3+1/5-1/7+1/9....) method in parallel: %lf seconds\n\n", end - start);
     }
 #pragma omp section
     {
+        start = omp_get_wtime();
         SecondMethod(N);
+        end = omp_get_wtime();
+        printf("\nTime to run f(x) = 4/(1+x*x) method in parallel: %lf seconds\n\n", end - start);
     }
 #pragma omp section
     {
+        start = omp_get_wtime();
         ThirdMethod(N);
+        end = omp_get_wtime();
+        printf("\nTime to monte carlo method in parallel: %lf seconds\n\n", end - start);
     }
 }
     return 0;
@@ -53,7 +63,7 @@ void FirstMethod(int N)
             sum=sum+a;
         }
         PI = 4 * sum;
-        printf("\nUsing 4*(1-1/3+1/5-1/7+1/9....) method: %.10lf", PI);
+        printf("\nUsing 4*(1-1/3+1/5-1/7+1/9....) method: %.20lf", PI);
 
 }
 
@@ -77,7 +87,7 @@ void SecondMethod(int N)
         }
     }
     pi=step*sum;
-    printf("\nUsing f(x) = 4/(1+x*x) method: %.10lf", pi);
+    printf("\nUsing f(x) = 4/(1+x*x) method: %.20lf", pi);
 }
 
 void ThirdMethod(int N)
@@ -100,6 +110,6 @@ void ThirdMethod(int N)
 #pragma omp critical
         Pi = (double)(4 * circle_points) / square_points;
     }
-        printf("\nUsing monte carlo method: %.10lf", Pi);
+        printf("\nUsing monte carlo method: %.20lf", Pi);
 
 }
