@@ -12,7 +12,7 @@ Monte Carlo method , very commonly known method.
 
 Output:
 
-![For 10,000 iterations:](https://imgur.com/j5ALdIZ)
+![img]https://i.imgur.com/j5ALdIZ.png[/img]
 
 
-![or 1 million iterations:](https://imgur.com/6kuZg7D)
+![img]https://i.imgur.com/6kuZg7D.png[/img]
