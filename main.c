@@ -13,7 +13,7 @@ int main()
     scanf("%d", &N);
     printf("\nActual value of pi upto 20 digits: 3.14159265358979323846");
     printf("\nThe estimated value of pi: \n");
-    omp_set_num_threads(20);
+    omp_set_num_threads(40);
     double start, end;
 #pragma omp parallel sections
 {
@@ -93,8 +93,9 @@ void SecondMethod(int N)
 
 void ThirdMethod(int N)
 {
-    double rand_x, rand_y, origin_dist, Pi;
-    int circle_points = 0, square_points = 0;
+    double rand_x, rand_y, Pi;
+    long double origin_dist;
+    long int circle_points = 0, square_points = 0;
 #pragma omp parallel for schedule(static)
     for (int i = 0; i < (N * N); i++) {
 
@@ -102,7 +103,7 @@ void ThirdMethod(int N)
         rand_y = (double)(rand() % (N + 1)) / N;
 
 
-        origin_dist = rand_x * rand_x + rand_y * rand_y;
+        origin_dist = rand_x * rand_x + rand_y * rand_y; //this may get integer overflow over large values on iterations
 
         if (origin_dist <= 1)
             circle_points++;
