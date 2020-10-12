@@ -11,8 +11,8 @@ Third technique:
 Monte Carlo method , very commonly known method. 
 
 Output:
-
+For 10,000 iterations:
 ![img](https://i.imgur.com/j5ALdIZ.png)
 
-
+For 1 million iterations:
 ![img](https://i.imgur.com/6kuZg7D.png)
